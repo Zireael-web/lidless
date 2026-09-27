@@ -6,6 +6,8 @@
 
 A macOS menu bar utility for open-lid clamshell mode. When a trusted physical external display is connected, Lidless disables the MacBook built-in display at the WindowServer display-layout level while keeping the keyboard, trackpad, speakers and external display active. Everything runs locally.
 
+**[Download for macOS](https://github.com/Zireael-web/lidless/releases/latest)** (Apple Silicon, macOS 13+)
+
 A personal side project for my own MacBook, where I explore native macOS development in Swift.
 
 [Controls](#controls) · [Safety](#safety) · [Build](#build) · [Install](#install) · [Recovery](#recovery) · [Limitations](#known-limitations)
