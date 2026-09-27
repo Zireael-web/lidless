@@ -1,119 +1,127 @@
-<img src="design/icon-variants/calm.png" alt="Иконка Lidless" width="128">
+<img src="design/icon-variants/calm.png" alt="Lidless app icon" width="128">
 
 # Lidless
 
-Утилита в строке меню macOS для работы MacBook с открытой крышкой и внешним монитором. Когда подключён физический внешний монитор, Lidless выключает встроенный экран на уровне раскладки дисплеев WindowServer. Клавиатура, трекпад, динамики и внешний монитор при этом продолжают работать. Приложение работает локально.
+**English** | [Русский](README.ru.md)
 
-Мой pet-проект для собственного MacBook: здесь пробую нативную разработку под macOS на Swift.
+A macOS menu bar utility for open-lid clamshell mode. When a trusted physical external display is connected, Lidless disables the MacBook built-in display at the WindowServer display-layout level while keeping the keyboard, trackpad, speakers and external display active. Everything runs locally.
 
-[Управление](#управление) · [Безопасность](#безопасность) · [Сборка](#сборка) · [Установка](#установка) · [Восстановление](#если-встроенный-экран-не-включился) · [Ограничения](#известные-ограничения)
+A personal side project for my own MacBook, where I explore native macOS development in Swift.
+
+[Controls](#controls) · [Safety](#safety) · [Build](#build) · [Install](#install) · [Recovery](#recovery) · [Limitations](#known-limitations)
 
 **Swift · AppKit · SwiftUI · macOS 13+ · Apple Silicon**
 
-## Предупреждение
+## Warning
 
-Приложение использует недокументированные приватные API macOS для управления дисплеями. Оно несовместимо с App Store и может перестать работать после обновления macOS. Предназначено только для личного локального использования.
+This app uses undocumented private macOS display APIs. It is not App Store compatible and may break after macOS updates. It is intended for personal local use only.
 
-## Управление
+## Controls
 
-- `Turn Off Built-in Now` — сразу выключает встроенный экран, если доступен активный физический внешний монитор.
-- `Restore` — включает встроенный экран обратно.
-- `Restore & Pause App` — включает встроенный экран, выключает автоматический режим и оставляет приложение неактивным в строке меню.
-- `Resume Auto Mode` — снова включает автоматическое отключение встроенного экрана.
-- `Quit & Restore` — включает встроенный экран и завершает приложение.
-- `Copy Diagnostics` — копирует в буфер обмена диагностику приватных API, дисплеев и сохранённого состояния.
+- `Turn Off Built-in Now` — disables the built-in display right away when an active physical external display is available.
+- `Restore` — restores the built-in display.
+- `Restore & Pause App` — restores the built-in display, turns off auto mode and keeps the app inert in the menu bar.
+- `Resume Auto Mode` — re-enables automatic built-in display disabling.
+- `Quit & Restore` — restores the built-in display before quitting.
+- `Copy Diagnostics` — copies private API, display and persisted state diagnostics to the clipboard.
 
-## Горячие клавиши
+## Hotkeys
 
 ```text
-Ctrl + Cmd + D         Переключить встроенный экран
+Ctrl + Cmd + D         Toggle built-in display
 Ctrl + Opt + Cmd + R   Restore & Pause App
 ```
 
-## Безопасность
+## Safety
 
-- Встроенный экран выключается, только если обнаружен активный физический внешний монитор.
-- В автоматическом режиме встроенный экран выключается, когда внешний монитор обнаружен и его состояние стабилизировалось.
-- При отключении внешнего монитора встроенный экран включается обратно.
-- При выходе из приложения встроенный экран восстанавливается.
-- Если предыдущий запуск завершился сбоем или осталась устаревшая «аренда» выключенного экрана, при старте экран восстанавливается.
-- Сторожевой процесс включает встроенный экран, если основное приложение завершилось, пока экран был выключен.
-- AirPlay, Sidecar, DisplayLink, заглушки и виртуальные дисплеи по умолчанию не считаются доверенными.
+- The built-in display is never disabled unless an active physical external display is detected.
+- Auto mode disables the built-in display after an external display is detected and settled.
+- Disconnecting the external display restores the built-in display.
+- The app restores the built-in display on quit.
+- Startup recovery restores the built-in display if the previous run crashed or left a stale display-off lease.
+- A watchdog helper restores the built-in display if the main app dies while the display-off lease is active.
+- AirPlay, Sidecar, DisplayLink, dummy and virtual displays are not trusted by default.
 
-## Сборка
+## Build
 
-Нужны Mac на Apple Silicon и Xcode Command Line Tools. В корне репозитория выполните:
+Requires a Mac with Apple Silicon and the Xcode Command Line Tools. From the repository root:
 
 ```sh
 ./build.sh
 ```
 
-Результат сборки:
+The build output is:
 
 ```text
 build/Lidless.app
 dist/Lidless.app.zip
-dist/Lidless.pkg      (если доступен pkgbuild)
+dist/Lidless.pkg      (when pkgbuild is available)
 ```
 
-Во время сборки `tools/generate_icons.swift` заново рисует иконку приложения и варианты в `design/icon-variants/`.
+During the build, `tools/generate_icons.swift` redraws the app icon and the variants in `design/icon-variants/`.
 
-## Установка
+## Install
 
 ```sh
 ./install.sh
 ```
 
-Скрипт собирает приложение, копирует его в `/Applications/Lidless.app` и запускает. При первом запуске приложение регистрирует себя и сторожевой процесс как пользовательские LaunchAgents, чтобы Lidless запускался после входа в систему.
+The installer builds the app, copies it to `/Applications/Lidless.app` and launches it. On first launch, the app registers itself and its watchdog as user LaunchAgents so Lidless starts after login.
 
-Скопировать приложение в `/Applications` без запуска:
+To copy the app to `/Applications` without launching it:
 
 ```sh
 ./install.sh --no-launch
 ```
 
-## Если встроенный экран не включился
+## Recovery
 
-1. Отключите кабель внешнего монитора: Lidless должен включить встроенный экран.
-2. Снова откройте Lidless: при запуске он попробует восстановить встроенный экран.
-3. Если WindowServer завис, перезагрузите Mac.
+If the built-in display does not come back:
 
-Некоторые мониторы и док-станции продолжают сообщать о подключённом дисплее, даже когда панель выключена. Тогда macOS считает внешний дисплей активным, и Lidless не может надёжно понять, что монитор не виден.
+1. Disconnect the external display cable; Lidless should restore the built-in display.
+2. Reopen Lidless; startup recovery will try to re-enable the built-in display.
+3. Reboot the Mac if WindowServer is stuck.
 
-## Приватные API
+Some monitors and docks keep reporting an external display even when the panel is powered off. In that case macOS may still consider the external display active, so Lidless cannot reliably tell that the monitor is not visible.
 
-Загружаются во время работы через `dlopen`/`dlsym`:
+## Private APIs
+
+Loaded at runtime with `dlopen`/`dlsym`:
 
 ```text
 SLSConfigureDisplayEnabled
 CGSConfigureDisplayEnabled
 ```
 
-Lidless не линкуется с приватными фреймворками напрямую и по умолчанию применяет конфигурацию дисплеев `.forSession`.
+Lidless does not link private frameworks directly and uses `.forSession` display configuration by default.
 
-В macOS 26.5.1 старые транзакции `CGDisplayConfigRef` могут возвращать `CGError 1001` на вызовы включения, которые ничего не меняют. Поэтому Lidless сначала использует соответствующую приватную транзакцию SkyLight и считает `1001` успехом, только если дисплей уже в нужном состоянии.
+On macOS 26.5.1, old `CGDisplayConfigRef` transactions can return `CGError 1001` for no-op enable calls. Lidless uses the matching private SkyLight transaction path first and treats `1001` as success only when the display is already in the requested active or inactive state.
 
-## Известные ограничения
+## Known limitations
 
-- Сочетание `Ctrl + Cmd + D` конфликтует с системным сочетанием macOS для поиска слова в словаре. Если поиск в словаре перестал работать, измените или отключите одно из сочетаний.
-- Доверенные дисплеи определяются по названию. AirPlay-дисплей называется по имени устройства-приёмника (например, модели телевизора), а локализованные названия могут не содержать отфильтрованных фрагментов. Поэтому такой дисплей может ошибочно считаться физическим монитором.
-- Сборка поддерживает только Apple Silicon (`arm64`).
+- The `Ctrl + Cmd + D` toggle hotkey conflicts with the macOS system shortcut for looking up a word in the dictionary. If dictionary lookup stops working, change or disable one of the shortcuts.
+- Trusted-display detection is name-based. AirPlay displays advertise the receiver device name (for example a TV model), and localized display names may not contain the filtered fragments, so such displays can be misclassified as trusted physical monitors.
+- The build targets Apple Silicon (`arm64`) only.
 
-## Структура проекта
+## Project structure
 
 ```text
 Lidless/
 ├── Lidless/
-│   ├── App/                 Точка входа и AppDelegate
-│   ├── Core/Display/        Состояние дисплеев, супервизор и мост к приватным API
-│   ├── Core/Hotkeys/        Глобальные горячие клавиши
-│   ├── Integrations/        LaunchAgents для автозапуска
-│   ├── Persistence/         Сохранение состояния между запусками
-│   ├── UI/MenuBar/          Значок в строке меню и панель управления
+│   ├── App/                 Entry point and AppDelegate
+│   ├── Core/Display/        Display state, supervisor and the private API bridge
+│   ├── Core/Hotkeys/        Global hotkeys
+│   ├── Integrations/        LaunchAgents for starting at login
+│   ├── Persistence/         State saved between launches
+│   ├── UI/MenuBar/          Menu bar item and control popover
 │   └── Info.plist
-├── LidlessWatchdog/         Сторожевой процесс
+├── LidlessWatchdog/         Watchdog helper
 ├── tools/generate_icons.swift
-├── design/icon-variants/    Варианты иконки
+├── design/icon-variants/    Icon variants
 ├── build.sh
 └── install.sh
 ```
+
+## License
+
+[MIT](LICENSE)
