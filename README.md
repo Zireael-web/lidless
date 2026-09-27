@@ -1,4 +1,4 @@
-<img src="design/icon-variants/calm.png" alt="Lidless app icon" width="128">
+![Lidless — project illustration](docs/assets/cover.svg)
 
 # Lidless
 
@@ -104,6 +104,12 @@ On macOS 26.5.1, old `CGDisplayConfigRef` transactions can return `CGError 1001`
 - The `Ctrl + Cmd + D` toggle hotkey conflicts with the macOS system shortcut for looking up a word in the dictionary. If dictionary lookup stops working, change or disable one of the shortcuts.
 - Trusted-display detection is name-based. AirPlay displays advertise the receiver device name (for example a TV model), and localized display names may not contain the filtered fragments, so such displays can be misclassified as trusted physical monitors.
 - The build targets Apple Silicon (`arm64`) only.
+
+## App icon
+
+The icon is drawn in code by `tools/generate_icons.swift`. Calm is the default; three more variants are generated alongside it.
+
+<img src="design/icon-variants/contact-sheet.png" alt="Lidless icon variants: Calm, Signal, Switcher and Mono" width="100%">
 
 ## Project structure
 
