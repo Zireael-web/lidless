@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="460" viewBox="0 0 960 460" role="img" aria-labelledby="title description">
-  <title id="title">Lidless — Lid open, screen off</title>
-  <desc id="description">Concept illustration of the project: an external monitor stays on while the MacBook's built-in screen is dark.</desc>
+  <title id="title">Lidless — Крышка открыта, экран выключен</title>
+  <desc id="description">Концептуальная иллюстрация проекта: внешний монитор работает, а встроенный экран MacBook выключен.</desc>
   <rect width="960" height="460" rx="28" fill="#eff2f3"/>
   <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
     <text x="44" y="64" fill="#52675b" font-size="30">Lidless</text>
-    <text x="40" y="167" fill="#34453d" font-size="62" font-weight="650" letter-spacing="-1.2">Lid open,</text>
-    <text x="40" y="242" fill="#34453d" font-size="62" font-weight="650" letter-spacing="-1.2">screen off</text>
-    <text x="44" y="389" fill="#52675b" font-size="30">macOS menu bar · Swift</text>
+    <text x="40" y="167" fill="#34453d" font-size="62" font-weight="650" letter-spacing="-1.2">Крышка открыта,</text>
+    <text x="40" y="242" fill="#34453d" font-size="62" font-weight="650" letter-spacing="-1.2">экран выключен</text>
+    <text x="44" y="389" fill="#52675b" font-size="30">Строка меню macOS · Swift</text>
   </g>
   <g transform="translate(628 70)">
     <circle cx="132" cy="146" r="130" fill="#e1e7e9"/>
